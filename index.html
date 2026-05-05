@@ -3,65 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人主页 | My Homepage</title>
+    <title>Your Name | Personal Page</title>
     <style>
-        body { margin: 0; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: #333; }
-        
-        /* 核心布局：Flexbox */
-        .container { display: flex; min-height: 100vh; }
-        
-        /* 分栏样式 */
-        .column { flex: 1; padding: 40px; overflow-y: auto; }
-        
-        /* 左侧中文栏 */
-        .cn-side { background-color: #ffffff; border-right: 1px solid #eee; }
-        
-        /* 右侧英文栏 */
-        .en-side { background-color: #f9f9f9; color: #555; }
-
-        /* 响应式：手机端自动变成上下堆叠 */
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .cn-side { border-right: none; border-bottom: 1px solid #eee; }
+        /* 苹果系统级字体设置 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* 柔和的苹果风背景 */
+            background-attachment: fixed;
+            color: #1d1d1f;
+            line-height: 1.5;
         }
 
-        h1 { border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .section { margin-bottom: 30px; }
+        /* 磨砂玻璃容器 */
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* 左右分栏玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px); /* 磨砂核心属性 */
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .left-panel { flex: 1; }
+        .right-panel { flex: 1; }
+
+        h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.5px; }
+        h2 { font-size: 1.8rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-top: 30px; }
+        
+        .tagline { color: #86868b; font-size: 1.2rem; margin-bottom: 30px; }
+
+        /* 论文/项目卡片样式 */
+        .item-card {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .pub-title { font-weight: 600; color: #0071e3; margin-bottom: 5px; }
+        .pub-meta { font-size: 0.9rem; color: #86868b; }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; margin: 20px; }
+            .glass-card { padding: 25px; }
+        }
+
+        /* 按钮动画 */
+        .btn {
+            display: inline-block;
+            background: #0071e3;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- 中文内容 -->
-    <div class="column cn-side">
-        <h1>你好，我是 [智志洋]</h1>
-        <div class="section">
-            <h3>关于我</h3>
-            <p>我是一名热衷于开源技术的开发者。</p>
+    <!-- 中文版块 -->
+    <div class="glass-card left-panel">
+        <h1>你好，我是 [姓名]</h1>
+        <p class="tagline">研究者 / 开发者 / 设计爱好者</p>
+        
+        <h2>关于我</h2>
+        <p>这里填写你的个人简介。目前在 [某大学/公司] 专注于 [某领域] 的研究。</p>
+
+        <h2>研究论文</h2>
+        <div class="item-card">
+            <div class="pub-title">基于深度学习的 XXX 系统优化</div>
+            <div class="pub-meta">发表于 CVPR 2024 · 第一作者</div>
         </div>
-        <div class="section">
-            <h3>专业技能</h3>
-            <ul>
-                <li>Python / JavaScript</li>
-                <li>数据分析与可视化</li>
-            </ul>
+        <div class="item-card">
+            <div class="pub-title">另一种神奇的算法研究</div>
+            <div class="pub-meta">发表于 Nature · 通讯作者</div>
         </div>
+
+        <a href="#" class="btn">联系我</a>
     </div>
 
-    <!-- 英文内容 -->
-    <div class="column en-side">
-        <h1>Hi, I'm [Zhiyang ZHI]</h1>
-        <div class="section">
-            <h3>About Me</h3>
-            <p>I am a developer passionate about open-source technologies.</p>
+    <!-- 英文版块 -->
+    <div class="glass-card right-panel">
+        <h1>Hello, I'm [Name]</h1>
+        <p class="tagline">Researcher / Developer / Creator</p>
+        
+        <h2>About Me</h2>
+        <p>Your English bio goes here. Focusing on [Your Field] at [Your Institution].</p>
+
+        <h2>Publications</h2>
+        <div class="item-card">
+            <div class="pub-title">Optimization of XXX via Deep Learning</div>
+            <div class="pub-meta">CVPR 2024 · First Author</div>
         </div>
-        <div class="section">
-            <h3>Skills</h3>
-            <ul>
-                <li>Python / JavaScript</li>
-                <li>Data Analysis & Visualization</li>
-            </ul>
+        <div class="item-card">
+            <div class="pub-title">A Novel Algorithm Study</div>
+            <div class="pub-meta">Nature · Corresponding Author</div>
         </div>
+
+        <a href="mailto:your@email.com" class="btn">Email Me</a>
     </div>
 </div>
 
