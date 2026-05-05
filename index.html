@@ -1,136 +1,1235 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name | Personal Page</title>
-    <style>
-        /* 苹果系统级字体设置 */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* 柔和的苹果风背景 */
-            background-attachment: fixed;
-            color: #1d1d1f;
-            line-height: 1.5;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智志洋 · Zhi Zhiyang | PhD Candidate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-        /* 磨砂玻璃容器 */
-        .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-        }
+  <style>
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --bg-dark:        #05070d;
+      --bg-layer:       #0a0e1a;
+      --glass-bg:       rgba(255,255,255,0.045);
+      --glass-border:   rgba(255,255,255,0.10);
+      --glass-hover:    rgba(255,255,255,0.08);
+      --accent-blue:    #4fa3ff;
+      --accent-cyan:    #00d4ff;
+      --accent-green:   #30d158;
+      --accent-purple:  #bf5af2;
+      --accent-orange:  #ff9f0a;
+      --text-primary:   rgba(255,255,255,0.92);
+      --text-secondary: rgba(255,255,255,0.55);
+      --text-tertiary:  rgba(255,255,255,0.30);
+      --hud-glow:       0 0 40px rgba(79,163,255,0.12);
+      --radius-card:    20px;
+      --radius-pill:    100px;
+      --font-en:        'DM Sans', sans-serif;
+      --font-cn:        'Noto Sans SC', sans-serif;
+      --font-mono:      'DM Mono', monospace;
+      --transition:     0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* 左右分栏玻璃卡片 */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px); /* 磨砂核心属性 */
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-            padding: 40px;
-            transition: transform 0.3s ease;
-        }
+    /* ─────────────────────────────────────────
+       BASE RESET
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .left-panel { flex: 1; }
-        .right-panel { flex: 1; }
+    html { scroll-behavior: smooth; }
 
-        h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.5px; }
-        h2 { font-size: 1.8rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-top: 30px; }
-        
-        .tagline { color: #86868b; font-size: 1.2rem; margin-bottom: 30px; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: var(--font-en);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* 论文/项目卡片样式 */
-        .item-card {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+    /* ─────────────────────────────────────────
+       ANIMATED BACKGROUND
+    ───────────────────────────────────────── */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    }
 
-        .item-card:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      animation: orb-drift 18s ease-in-out infinite alternate;
+    }
+    .bg-orb:nth-child(1) { width: 700px; height: 700px; background: #1a3a6b; top: -20%; left: -15%; animation-duration: 20s; }
+    .bg-orb:nth-child(2) { width: 500px; height: 500px; background: #0d3b4f; top: 30%; right: -10%; animation-duration: 25s; animation-delay: -5s; }
+    .bg-orb:nth-child(3) { width: 400px; height: 400px; background: #2a1a4e; bottom: -10%; left: 35%; animation-duration: 22s; animation-delay: -10s; }
 
-        .pub-title { font-weight: 600; color: #0071e3; margin-bottom: 5px; }
-        .pub-meta { font-size: 0.9rem; color: #86868b; }
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(40px, -30px) scale(1.08); }
+      100% { transform: translate(-20px, 20px) scale(0.95); }
+    }
 
-        /* 响应式适配 */
-        @media (max-width: 768px) {
-            .container { flex-direction: column; margin: 20px; }
-            .glass-card { padding: 25px; }
-        }
+    /* Grid overlay */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
 
-        /* 按钮动画 */
-        .btn {
-            display: inline-block;
-            background: #0071e3;
-            color: white;
-            padding: 10px 22px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            margin-top: 20px;
-            transition: opacity 0.2s;
-        }
-        .btn:hover { opacity: 0.8; }
-    </style>
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+      background: rgba(5, 7, 13, 0.72);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-size: 15px; font-weight: 500; letter-spacing: 0.02em;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent-blue); }
+
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 400; color: var(--text-secondary);
+      text-decoration: none; letter-spacing: 0.03em;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .lang-toggle {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-pill);
+      padding: 4px 6px;
+      cursor: pointer;
+    }
+    .lang-btn {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      padding: 3px 10px; border-radius: 100px;
+      border: none; background: transparent; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .lang-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+
+    /* ─────────────────────────────────────────
+       MAIN LAYOUT
+    ───────────────────────────────────────── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 80px;
+      animation: fade-up 0.8s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(79,163,255,0.10);
+      border: 1px solid rgba(79,163,255,0.25);
+      border-radius: var(--radius-pill);
+      padding: 5px 14px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-blue);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-name {
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .hero-name strong { font-weight: 600; }
+
+    .hero-name-cn {
+      font-family: var(--font-cn);
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      letter-spacing: 0.15em;
+    }
+
+    .hero-desc {
+      font-size: 15px; font-weight: 300; color: var(--text-secondary);
+      line-height: 1.75; max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .hero-contacts {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+
+    .contact-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font-size: 12px; color: var(--text-secondary);
+      text-decoration: none;
+      transition: all var(--transition);
+      font-family: var(--font-mono);
+    }
+    .contact-pill:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+    .contact-pill svg { flex-shrink: 0; }
+
+    /* Avatar */
+    .hero-avatar {
+      width: 140px; height: 140px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(79,163,255,0.2), rgba(191,90,242,0.2));
+      border: 1px solid rgba(79,163,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 52px; font-weight: 700;
+      color: var(--accent-blue);
+      font-family: var(--font-mono);
+      position: relative;
+      box-shadow: var(--hud-glow);
+      flex-shrink: 0;
+    }
+    .hero-avatar::before {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: 29px;
+      background: linear-gradient(135deg, rgba(79,163,255,0.4) 0%, transparent 50%, rgba(191,90,242,0.3) 100%);
+      z-index: -1;
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION HEADERS
+    ───────────────────────────────────────── */
+    .section {
+      margin-bottom: 60px;
+      animation: fade-up 0.8s ease both;
+    }
+
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .section-title {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .section-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--glass-border), transparent);
+    }
+
+    /* ─────────────────────────────────────────
+       GLASS CARD BASE
+    ───────────────────────────────────────── */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      transition: all var(--transition);
+    }
+    .glass-card:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.14);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25), var(--hud-glow);
+    }
+
+    /* ─────────────────────────────────────────
+       RESEARCH INTERESTS
+    ───────────────────────────────────────── */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .interest-card {
+      padding: 22px 20px;
+      border-radius: var(--radius-card);
+    }
+    .interest-icon {
+      font-size: 26px; margin-bottom: 12px;
+    }
+    .interest-title-en {
+      font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px;
+    }
+    .interest-title-cn {
+      font-family: var(--font-cn); font-size: 11px; color: var(--text-tertiary);
+    }
+
+    /* ─────────────────────────────────────────
+       EDUCATION TIMELINE
+    ───────────────────────────────────────── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 130px 1px 1fr;
+      gap: 0 20px;
+      position: relative;
+    }
+
+    .timeline-time {
+      text-align: right;
+      padding: 22px 0;
+    }
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-tertiary);
+      letter-spacing: 0.04em;
+    }
+    .timeline-degree-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .timeline-track {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .timeline-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid var(--accent-blue);
+      background: var(--bg-dark);
+      flex-shrink: 0; margin-top: 28px;
+      position: relative; z-index: 1;
+    }
+    .timeline-dot.special { border-color: var(--accent-purple); }
+    .timeline-connector {
+      flex: 1; width: 1px;
+      background: linear-gradient(to bottom, rgba(79,163,255,0.3), rgba(79,163,255,0.05));
+    }
+    .timeline-item:last-child .timeline-connector { display: none; }
+
+    .timeline-content {
+      padding: 16px 0 24px;
+    }
+    .timeline-card {
+      padding: 18px 20px;
+    }
+    .timeline-school { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .timeline-school-cn { font-family: var(--font-cn); font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .timeline-dept {
+      font-size: 12px; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .timeline-tag {
+      background: rgba(79,163,255,0.10);
+      border: 1px solid rgba(79,163,255,0.20);
+      border-radius: var(--radius-pill);
+      padding: 2px 10px;
+      font-size: 10px; font-weight: 500; color: var(--accent-blue);
+      letter-spacing: 0.04em;
+    }
+    .timeline-tag.purple {
+      background: rgba(191,90,242,0.10);
+      border-color: rgba(191,90,242,0.20);
+      color: var(--accent-purple);
+    }
+
+    /* ─────────────────────────────────────────
+       PUBLICATIONS
+    ───────────────────────────────────────── */
+    .pub-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .pub-card {
+      padding: 20px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .pub-rank {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-tertiary);
+      padding-top: 2px; width: 20px; text-align: right;
+    }
+
+    .pub-title {
+      font-size: 14px; font-weight: 500; line-height: 1.55;
+      margin-bottom: 6px; color: var(--text-primary);
+    }
+
+    .pub-meta {
+      font-size: 12px; color: var(--text-secondary);
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    }
+    .pub-journal { font-style: italic; }
+    .pub-meta-sep { color: var(--text-tertiary); }
+
+    .pub-badges { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .pub-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+      padding: 2px 9px; border-radius: var(--radius-pill);
+      border: 1px solid;
+    }
+    .badge-q1    { color: var(--accent-green);  border-color: rgba(48,209,88,0.3);  background: rgba(48,209,88,0.08);  }
+    .badge-q2    { color: var(--accent-blue);   border-color: rgba(79,163,255,0.3); background: rgba(79,163,255,0.08); }
+    .badge-scie  { color: var(--accent-orange); border-color: rgba(255,159,10,0.3); background: rgba(255,159,10,0.08); }
+    .badge-ei    { color: var(--accent-purple);  border-color: rgba(191,90,242,0.3); background: rgba(191,90,242,0.08); }
+    .badge-core  { color: var(--text-secondary); border-color: var(--glass-border); background: var(--glass-bg); }
+    .badge-first { color: #fff; background: rgba(79,163,255,0.20); border-color: rgba(79,163,255,0.40); }
+
+    .pub-if {
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);
+    }
+
+    /* ─────────────────────────────────────────
+       PATENTS & SOFTWARE
+    ───────────────────────────────────────── */
+    .items-list { display: flex; flex-direction: column; gap: 10px; }
+    .item-card {
+      padding: 16px 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .item-icon-wrap {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .item-icon-wrap.blue   { background: rgba(79,163,255,0.12); }
+    .item-icon-wrap.green  { background: rgba(48,209,88,0.12);  }
+    .item-icon-wrap.purple { background: rgba(191,90,242,0.12); }
+    .item-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .item-meta  { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); }
+
+    /* ─────────────────────────────────────────
+       SKILLS
+    ───────────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .skill-card {
+      padding: 20px;
+    }
+    .skill-category {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 10px;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-pill);
+      padding: 4px 12px;
+      font-size: 12px; font-family: var(--font-mono);
+      color: var(--text-secondary);
+    }
+    .skill-tag.highlight { color: var(--accent-blue); border-color: rgba(79,163,255,0.25); background: rgba(79,163,255,0.08); }
+
+    /* ─────────────────────────────────────────
+       ACTIVITIES
+    ───────────────────────────────────────── */
+    .activities-list { display: flex; flex-direction: column; gap: 10px; }
+    .activity-card {
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .activity-year {
+      font-family: var(--font-mono); font-size: 11px; color: var(--accent-blue);
+      flex-shrink: 0; width: 40px;
+    }
+    .activity-title { font-size: 13px; font-weight: 500; }
+    .activity-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .activity-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-blue); flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 32px 24px 48px;
+      font-size: 12px; color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      border-top: 1px solid var(--glass-border);
+    }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+
+    /* ─────────────────────────────────────────
+       ANIMATIONS
+    ───────────────────────────────────────── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.2s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.4s; }
+    .section:nth-child(5) { animation-delay: 0.5s; }
+    .section:nth-child(6) { animation-delay: 0.6s; }
+
+    /* ─────────────────────────────────────────
+       LANGUAGE TOGGLE LOGIC
+    ───────────────────────────────────────── */
+    .zh { display: block; }
+    .en { display: none;  }
+    body.lang-en .zh { display: none;  }
+    body.lang-en .en { display: block; }
+    /* inline-flex exceptions */
+    body.lang-en .en.inline-flex,
+    span.en { display: inline; }
+    body:not(.lang-en) .en { display: none !important; }
+    body.lang-en .zh { display: none !important; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 680px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      main { padding: 90px 16px 60px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-avatar { display: none; }
+      .interests-grid { grid-template-columns: 1fr 1fr; }
+      .timeline-item { grid-template-columns: 90px 1px 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 中文版块 -->
-    <div class="glass-card left-panel">
-        <h1>你好，我是 [姓名]</h1>
-        <p class="tagline">研究者 / 开发者 / 设计爱好者</p>
-        
-        <h2>关于我</h2>
-        <p>这里填写你的个人简介。目前在 [某大学/公司] 专注于 [某领域] 的研究。</p>
+  <!-- ── Ambient Background ── -->
+  <div class="bg-canvas">
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+  </div>
+  <div class="bg-grid"></div>
 
-        <h2>研究论文</h2>
-        <div class="item-card">
-            <div class="pub-title">基于深度学习的 XXX 系统优化</div>
-            <div class="pub-meta">发表于 CVPR 2024 · 第一作者</div>
-        </div>
-        <div class="item-card">
-            <div class="pub-title">另一种神奇的算法研究</div>
-            <div class="pub-meta">发表于 Nature · 通讯作者</div>
+  <!-- ── Navigation ── -->
+  <nav>
+    <a class="nav-logo" href="#">ZHI<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#research"><span class="zh">研究方向</span><span class="en">Research</span></a></li>
+      <li><a href="#education"><span class="zh">教育经历</span><span class="en">Education</span></a></li>
+      <li><a href="#publications"><span class="zh">学术成果</span><span class="en">Publications</span></a></li>
+      <li><a href="#patents"><span class="zh">专利软著</span><span class="en">Patents</span></a></li>
+      <li><a href="#activities"><span class="zh">学术活动</span><span class="en">Activities</span></a></li>
+    </ul>
+    <div class="lang-toggle" id="langToggle">
+      <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <!-- ── Main ── -->
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div>
+        <div class="hero-badge">
+          <span class="zh">博士研究生 · 中山大学</span>
+          <span class="en">PhD Candidate · Sun Yat-sen University</span>
         </div>
 
-        <a href="#" class="btn">联系我</a>
+        <div class="hero-name">
+          <span class="zh"><strong>智志洋</strong></span>
+          <span class="en"><strong>Zhi</strong> Zhiyang</span>
+        </div>
+
+        <div class="hero-name-cn">
+          <span class="zh">Zhi Zhiyang &nbsp;·&nbsp; zhizhiy@126.com</span>
+          <span class="en">智志洋 &nbsp;·&nbsp; zhizhiy@126.com</span>
+        </div>
+
+        <p class="hero-desc zh">
+          专注于三维激光点云数据获取与处理、工程智能建造及地理信息系统。目前就读于中山大学遥感科学与技术学院，并在意大利 FBK 从事国家公派交流访学。
+        </p>
+        <p class="hero-desc en">
+          Researching 3D LiDAR data acquisition & processing, intelligent engineering construction, and GIS. PhD candidate at School of Remote Sensing and Information Technology, Sun Yat-sen University. Currently a visiting scholar at FBK, Italy.
+        </p>
+
+        <div class="hero-contacts">
+          <a class="contact-pill" href="mailto:zhizhiy@126.com">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            zhizhiy@126.com
+          </a>
+          <a class="contact-pill" href="mailto:zhiabner@gmail.com">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            zhiabner@gmail.com
+          </a>
+          <a class="contact-pill" href="https://blog.csdn.net/weixin_41512747" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            CSDN Blog · 28W+
+          </a>
+          <a class="contact-pill" href="tel:17516215070">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.32h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.04-.88a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+            +86 175 1621 5070
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-avatar">ZZY</div>
     </div>
 
-    <!-- 英文版块 -->
-    <div class="glass-card right-panel">
-        <h1>Hello, I'm [Name]</h1>
-        <p class="tagline">Researcher / Developer / Creator</p>
-        
-        <h2>About Me</h2>
-        <p>Your English bio goes here. Focusing on [Your Field] at [Your Institution].</p>
+    <!-- RESEARCH INTERESTS -->
+    <div class="section" id="research">
+      <div class="section-header">
+        <span class="section-label">01</span>
+        <h2 class="section-title"><span class="zh">研究方向</span><span class="en">Research Interests</span></h2>
+        <div class="section-line"></div>
+      </div>
 
-        <h2>Publications</h2>
-        <div class="item-card">
-            <div class="pub-title">Optimization of XXX via Deep Learning</div>
-            <div class="pub-meta">CVPR 2024 · First Author</div>
+      <div class="interests-grid">
+        <div class="glass-card interest-card">
+          <div class="interest-icon">📡</div>
+          <div class="interest-title-en">LiDAR Data Acquisition</div>
+          <div class="interest-title-cn">三维激光数据获取与应用</div>
         </div>
-        <div class="item-card">
-            <div class="pub-title">A Novel Algorithm Study</div>
-            <div class="pub-meta">Nature · Corresponding Author</div>
+        <div class="glass-card interest-card">
+          <div class="interest-icon">🏗️</div>
+          <div class="interest-title-en">Intelligent Engineering</div>
+          <div class="interest-title-cn">工程智能建造</div>
         </div>
-
-        <a href="mailto:your@email.com" class="btn">Email Me</a>
+        <div class="glass-card interest-card">
+          <div class="interest-icon">🗺️</div>
+          <div class="interest-title-en">GIS & Smart Transport</div>
+          <div class="interest-title-cn">地理信息系统与智慧交通</div>
+        </div>
+      </div>
     </div>
-</div>
 
+    <!-- EDUCATION -->
+    <div class="section" id="education">
+      <div class="section-header">
+        <span class="section-label">02</span>
+        <h2 class="section-title"><span class="zh">教育经历</span><span class="en">Education</span></h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="timeline">
+
+        <!-- PhD -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <div class="timeline-year">2022.09<br/>— 2026.07</div>
+            <div class="timeline-degree-label" style="color:var(--accent-purple)">
+              <span class="zh">博士</span><span class="en">PhD</span>
+            </div>
+          </div>
+          <div class="timeline-track">
+            <div class="timeline-dot special"></div>
+            <div class="timeline-connector"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="glass-card timeline-card">
+              <div class="timeline-school">
+                <span class="zh">中山大学</span>
+                <span class="en">Sun Yat-sen University</span>
+              </div>
+              <div class="timeline-school-cn zh">遥感科学与技术学院 · 资源与环境</div>
+              <div class="timeline-school-cn en">School of Remote Sensing & Information Technology · Resources & Environment</div>
+              <div class="timeline-dept">
+                <span class="timeline-tag purple">"双一流"</span>
+                <span class="zh">指导老师：张吴明、李爱光</span>
+                <span class="en">Advisors: Zhang Wuming, Li Aiguang</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exchange -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <div class="timeline-year">2024.11<br/>— 2026.02</div>
+            <div class="timeline-degree-label" style="color:var(--accent-cyan)">
+              <span class="zh">交流</span><span class="en">Exchange</span>
+            </div>
+          </div>
+          <div class="timeline-track">
+            <div class="timeline-dot" style="border-color:var(--accent-cyan)"></div>
+            <div class="timeline-connector"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="glass-card timeline-card">
+              <div class="timeline-school">FBK · Fondazione Bruno Kessler</div>
+              <div class="timeline-school-cn">3D Optical Metrology Unit · <span class="zh">摄影测量与遥感</span><span class="en">Photogrammetry & Remote Sensing</span></div>
+              <div class="timeline-dept">
+                <span class="timeline-tag" style="color:var(--accent-cyan);border-color:rgba(0,212,255,0.25);background:rgba(0,212,255,0.08)"><span class="zh">国家公派</span><span class="en">State Funded</span></span>
+                <span>Fabio Remondino (Italy)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <div class="timeline-year">2019.09<br/>— 2022.07</div>
+            <div class="timeline-degree-label" style="color:var(--accent-blue)">
+              <span class="zh">硕士</span><span class="en">Master</span>
+            </div>
+          </div>
+          <div class="timeline-track">
+            <div class="timeline-dot"></div>
+            <div class="timeline-connector"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="glass-card timeline-card">
+              <div class="timeline-school">
+                <span class="zh">郑州大学</span><span class="en">Zhengzhou University</span>
+              </div>
+              <div class="timeline-school-cn zh">地球科学与技术学院 · 测绘科学与技术</div>
+              <div class="timeline-school-cn en">College of Earth Science & Technology · Geomatics</div>
+              <div class="timeline-dept">
+                <span class="timeline-tag">"双一流"</span>
+                <span class="zh">导师：刘建忠</span>
+                <span class="en">Advisor: Liu Jianzhong</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bachelor -->
+        <div class="timeline-item">
+          <div class="timeline-time">
+            <div class="timeline-year">2015.09<br/>— 2019.07</div>
+            <div class="timeline-degree-label" style="color:var(--accent-green)">
+              <span class="zh">本科</span><span class="en">Bachelor</span>
+            </div>
+          </div>
+          <div class="timeline-track">
+            <div class="timeline-dot" style="border-color:var(--accent-green)"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="glass-card timeline-card">
+              <div class="timeline-school">
+                <span class="zh">河南理工大学</span><span class="en">Henan Polytechnic University</span>
+              </div>
+              <div class="timeline-school-cn zh">测绘与国土信息工程学院 · 测绘工程（卓越工程师）</div>
+              <div class="timeline-school-cn en">School of Surveying & Land Information Engineering · Surveying Engineering (Top Engineer Program)</div>
+              <div class="timeline-dept">
+                <span class="timeline-tag" style="color:var(--accent-green);border-color:rgba(48,209,88,0.25);background:rgba(48,209,88,0.08)">"双一流"学科</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PUBLICATIONS -->
+    <div class="section" id="publications">
+      <div class="section-header">
+        <span class="section-label">03</span>
+        <h2 class="section-title"><span class="zh">学术成果</span><span class="en">Publications</span></h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="pub-list">
+
+        <!-- pub 1 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">01</div>
+          <div>
+            <div class="pub-title">P-CSF: Polar coordinate cloth simulation filtering algorithm for multi-type tunnel point clouds</div>
+            <div class="pub-meta">
+              <span><strong>Zhi Z</strong>, Chang B, Li Y, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">Tunnelling and Underground Space Technology</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2025 · IF=7.4</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-first">First Author</span>
+              <span class="pub-badge badge-q1">中科院 1区 TOP</span>
+              <span class="pub-badge badge-scie">SCI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 2 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">02</div>
+          <div>
+            <div class="pub-title">Geospatial structure and evolution analysis of national terrestrial adjacency network based on complex network</div>
+            <div class="pub-meta">
+              <span><strong>Zhi Z</strong>, Liu J, Liu J, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">Journal of Geovisualization and Spatial Analysis</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2024 · IF=6.8</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-first">First Author</span>
+              <span class="pub-badge badge-q1">JCR 1区</span>
+              <span class="pub-badge badge-ei">EI · ESCI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 3 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">03</div>
+          <div>
+            <div class="pub-title">
+              <span class="zh">点云密度特征约束下的隧道开挖轴线抗噪提取</span>
+              <span class="en">Noise-resistant extraction of tunnel excavation axis under point cloud density constraints</span>
+            </div>
+            <div class="pub-meta">
+              <span class="zh">智志洋, 李爱光, 杜志刚, 等.</span>
+              <span class="en"><strong>Zhi Z</strong>, Li A, Du Z, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal"><span class="zh">测绘通报</span><span class="en">Bulletin of Surveying and Mapping</span></span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2024 (1): 109</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-first">First Author</span>
+              <span class="pub-badge badge-core"><span class="zh">中文核心</span><span class="en">Core Journal</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 4 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">04</div>
+          <div>
+            <div class="pub-title">A survey of point cloud completion</div>
+            <div class="pub-meta">
+              <span>Zhuang Z, <strong>Zhi Z</strong>, Han T, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">IEEE J-STARS</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2024 · IF=5.3</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-q2">2nd Author</span>
+              <span class="pub-badge badge-q2">中科院 2区</span>
+              <span class="pub-badge badge-scie">SCIE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 5 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">05</div>
+          <div>
+            <div class="pub-title">Joint structure detection and multi-scale clustering filtering for tunnel lining extraction from point clouds</div>
+            <div class="pub-meta">
+              <span>Zhao Y, Li A, Du Z, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">IEEE TITS</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2024 · IF=8.4</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-q1">中科院 1区 TOP</span>
+              <span class="pub-badge badge-scie">SCI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 6 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">06</div>
+          <div>
+            <div class="pub-title">Anomaly detection in multibeam bathymetric point clouds integrating prior constraints with geostatistical prediction</div>
+            <div class="pub-meta">
+              <span>Cui X, Chang B, Zhang S, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">IEEE J-STARS</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2024 · IF=5.3</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-q2">中科院 2区</span>
+              <span class="pub-badge badge-scie">SCIE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- pub 7 -->
+        <div class="glass-card pub-card">
+          <div class="pub-rank">07</div>
+          <div>
+            <div class="pub-title">
+              <span class="zh">钻爆法隧道衬砌浇筑量的模型化估算</span>
+              <span class="en">Model-based estimation of tunnel lining concrete volume for drill-and-blast tunnels</span>
+            </div>
+            <div class="pub-meta">
+              <span class="zh">赵翼鹏, 杜志刚, 张吴明, 郭朝飞, 智志洋, 等.</span>
+              <span class="en">Zhao Y, Du Z, Zhang W, Guo C, <strong>Zhi Z</strong>, et al.</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal"><span class="zh">测绘通报</span><span class="en">Bulletin of Surveying and Mapping</span></span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">2025 (12): 82-87</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-core"><span class="zh">中文核心</span><span class="en">Core Journal</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ADD NEW PUBLICATIONS ABOVE THIS COMMENT ── -->
+        <!-- Template:
+        <div class="glass-card pub-card">
+          <div class="pub-rank">08</div>
+          <div>
+            <div class="pub-title">Paper Title Here</div>
+            <div class="pub-meta">
+              <span>Authors</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-journal">Journal Name</span>
+              <span class="pub-meta-sep">·</span>
+              <span class="pub-if">Year · IF=X.X</span>
+            </div>
+            <div class="pub-badges">
+              <span class="pub-badge badge-first">First Author</span>
+              <span class="pub-badge badge-q1">中科院 1区</span>
+              <span class="pub-badge badge-scie">SCI</span>
+            </div>
+          </div>
+        </div>
+        -->
+
+      </div>
+    </div>
+
+    <!-- PATENTS & SOFTWARE -->
+    <div class="section" id="patents">
+      <div class="section-header">
+        <span class="section-label">04</span>
+        <h2 class="section-title"><span class="zh">专利及软著</span><span class="en">Patents & Software</span></h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="items-list">
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap green">📐</div>
+          <div>
+            <div class="item-title zh">外观设计专利：二等水准测量装置（ZL 2024 3 0737610.4，已授权）</div>
+            <div class="item-title en">Design Patent: Second-class Leveling Device (ZL 2024 3 0737610.4, Granted)</div>
+            <div class="item-meta">序 9 · Design Patent</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap blue">🔬</div>
+          <div>
+            <div class="item-title zh">发明专利：一种隧道复合式衬砌线位拟合方法（2024101107207，实质审查）</div>
+            <div class="item-title en">Invention Patent: Tunnel Composite Lining Line Fitting Method (2024101107207, Substantive Examination)</div>
+            <div class="item-meta">序 2 · Invention Patent</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap blue">🔬</div>
+          <div>
+            <div class="item-title zh">发明专利：一种基于凹凸包算法的隧道混凝土消耗量差分估算方法（202410980797X，实质审查）</div>
+            <div class="item-title en">Invention Patent: Concave-Convex Hull Algorithm for Differential Estimation of Tunnel Concrete Consumption (202410980797X, Substantive Examination)</div>
+            <div class="item-meta">序 2 · Invention Patent</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap blue">🔬</div>
+          <div>
+            <div class="item-title zh">发明专利：一种基于多尺度空间聚类的隧道衬砌空间探测提取方法（2024101352730，实质审查）</div>
+            <div class="item-title en">Invention Patent: Multi-scale Spatial Clustering for Tunnel Lining Detection & Extraction (2024101352730, Substantive Examination)</div>
+            <div class="item-meta">序 3 · Invention Patent</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap purple">💾</div>
+          <div>
+            <div class="item-title zh">软著：地缘关系网络可视化分析系统 V1.0（2022SR0077957）</div>
+            <div class="item-title en">Software Copyright: Geopolitical Network Visualization Analysis System V1.0 (2022SR0077957)</div>
+            <div class="item-meta">2022.01 · Software Copyright</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap purple">💾</div>
+          <div>
+            <div class="item-title zh">软著：可扩展模拟地理信息系统 V1.0（2020SR1062861）</div>
+            <div class="item-title en">Software Copyright: Extensible Simulated GIS V1.0 (2020SR1062861)</div>
+            <div class="item-meta">2020.09 · Software Copyright</div>
+          </div>
+        </div>
+
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap purple">💾</div>
+          <div>
+            <div class="item-title zh">软著：建筑物变形监测数据自动化处理系统 V1.0（2019SR1033001）</div>
+            <div class="item-title en">Software Copyright: Building Deformation Monitoring Data Automated Processing System V1.0 (2019SR1033001)</div>
+            <div class="item-meta">2019.07 · Software Copyright</div>
+          </div>
+        </div>
+
+        <!-- ── ADD NEW PATENTS / SOFTWARE ABOVE THIS COMMENT ── -->
+        <!-- Template:
+        <div class="glass-card item-card">
+          <div class="item-icon-wrap blue">🔬</div>
+          <div>
+            <div class="item-title zh">中文标题</div>
+            <div class="item-title en">English Title</div>
+            <div class="item-meta">序 X · Patent/Copyright</div>
+          </div>
+        </div>
+        -->
+
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section" id="skills">
+      <div class="section-header">
+        <span class="section-label">05</span>
+        <h2 class="section-title"><span class="zh">技能专长</span><span class="en">Skills</span></h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="skills-grid">
+
+        <div class="glass-card skill-card">
+          <div class="skill-category"><span class="zh">编程语言</span><span class="en">Programming</span></div>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">Python</span>
+            <span class="skill-tag highlight">Matlab</span>
+            <span class="skill-tag">C++</span>
+            <span class="skill-tag">C#</span>
+            <span class="skill-tag">HTML / JS</span>
+            <span class="skill-tag">QT</span>
+          </div>
+        </div>
+
+        <div class="glass-card skill-card">
+          <div class="skill-category"><span class="zh">深度学习</span><span class="en">Deep Learning</span></div>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">YOLO</span>
+            <span class="skill-tag highlight">PointNet</span>
+            <span class="skill-tag">PointTransformer</span>
+            <span class="skill-tag">PyTorch</span>
+          </div>
+        </div>
+
+        <div class="glass-card skill-card">
+          <div class="skill-category"><span class="zh">工具平台</span><span class="en">Tools & Platforms</span></div>
+          <div class="skill-tags">
+            <span class="skill-tag">Overleaf / LaTeX</span>
+            <span class="skill-tag">VSCode</span>
+            <span class="skill-tag">TeXLive</span>
+            <span class="skill-tag">GitHub</span>
+          </div>
+        </div>
+
+        <div class="glass-card skill-card">
+          <div class="skill-category"><span class="zh">证书资质</span><span class="en">Certifications</span></div>
+          <div class="skill-tags">
+            <span class="skill-tag highlight"><span class="zh">计算机二、三级</span><span class="en">NCRE Lv.2 & 3</span></span>
+            <span class="skill-tag highlight">CET-6</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACADEMIC ACTIVITIES -->
+    <div class="section" id="activities">
+      <div class="section-header">
+        <span class="section-label">06</span>
+        <h2 class="section-title"><span class="zh">学术活动</span><span class="en">Academic Activities</span></h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="activities-list">
+
+        <div class="glass-card activity-card">
+          <div class="activity-year">2025</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">专著撰写：《激光雷达点云处理基础教程》（待出版）</div>
+            <div class="activity-title en">Monograph Contribution: <em>Fundamentals of LiDAR Point Cloud Processing</em> (forthcoming)</div>
+            <div class="activity-detail zh">负责隧道点云处理章节</div>
+            <div class="activity-detail en">Responsible for the tunnel point cloud processing chapter</div>
+          </div>
+        </div>
+
+        <div class="glass-card activity-card">
+          <div class="activity-year">2024</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">2024 年世界隧道大会（WTC 2024）</div>
+            <div class="activity-title en">World Tunnel Congress 2024 (WTC 2024)</div>
+            <div class="activity-detail">广东 深圳 · Shenzhen, China</div>
+          </div>
+        </div>
+
+        <div class="glass-card activity-card">
+          <div class="activity-year">2024</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">本科生课程助教：《三维遥感技术导论》</div>
+            <div class="activity-title en">Teaching Assistant: Introduction to 3D Remote Sensing</div>
+            <div class="activity-detail zh">中山大学 · 2024年</div>
+            <div class="activity-detail en">Sun Yat-sen University · 2024</div>
+          </div>
+        </div>
+
+        <div class="glass-card activity-card">
+          <div class="activity-year">2023</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">第七届全国激光雷达大会（海报展示）</div>
+            <div class="activity-title en">7th National LiDAR Conference (Poster)</div>
+            <div class="activity-detail">河南 焦作 · Jiaozuo, Henan</div>
+          </div>
+        </div>
+
+        <div class="glass-card activity-card">
+          <div class="activity-year">2023</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">全国博士学术论坛（测绘科学与技术）口头报告</div>
+            <div class="activity-title en">National PhD Academic Forum — Geomatics (Oral Presentation)</div>
+            <div class="activity-detail">甘肃 兰州 · Lanzhou, Gansu</div>
+          </div>
+        </div>
+
+        <!-- ── ADD NEW ACTIVITIES ABOVE THIS COMMENT ── -->
+        <!-- Template:
+        <div class="glass-card activity-card">
+          <div class="activity-year">202X</div>
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-title zh">中文标题</div>
+            <div class="activity-title en">English Title</div>
+            <div class="activity-detail">Location · Date</div>
+          </div>
+        </div>
+        -->
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span class="zh">© 2025 智志洋 · 中山大学 · 遥感科学与技术学院</span>
+    <span class="en">© 2025 Zhi Zhiyang · Sun Yat-sen University · School of Remote Sensing</span>
+    <br/><br/>
+    <a href="https://blog.csdn.net/weixin_41512747" target="_blank" rel="noopener">CSDN Blog</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:zhizhiy@126.com">zhizhiy@126.com</a>
+    &nbsp;·&nbsp;
+    <span class="zh">广东省珠海市</span><span class="en">Zhuhai, Guangdong</span>
+  </footer>
+
+  <script>
+    // ── Language Toggle ──
+    function setLang(lang) {
+      document.body.classList.toggle('lang-en', lang === 'en');
+      document.getElementById('btnZH').classList.toggle('active', lang === 'zh');
+      document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+      localStorage.setItem('lang', lang);
+    }
+
+    // Restore preference
+    const saved = localStorage.getItem('lang');
+    if (saved) setLang(saved);
+
+    // ── Scroll-reveal with IntersectionObserver ──
+    const sections = document.querySelectorAll('.section');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.animationPlayState = 'running';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    sections.forEach(s => {
+      s.style.animationPlayState = 'paused';
+      io.observe(s);
+    });
+
+    // ── Active nav highlight ──
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sectionEls = document.querySelectorAll('div[id]');
+
+    const navObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(a => {
+            a.style.color = a.getAttribute('href') === '#' + e.target.id
+              ? 'rgba(255,255,255,0.92)'
+              : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sectionEls.forEach(s => navObs.observe(s));
+  </script>
 </body>
 </html>
