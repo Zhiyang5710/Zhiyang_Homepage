@@ -38,6 +38,32 @@
     /* ─────────────────────────────────────────
        BASE RESET
     ───────────────────────────────────────── */
+    /*--new style--*/
+    /* Light theme overrides */
+    body.theme-light {
+      --bg-dark:        #f0f4f8;
+      --bg-layer:       #e8edf3;
+      --glass-bg:       rgba(255,255,255,0.55);
+      --glass-border:   rgba(0,0,0,0.08);
+      --glass-hover:    rgba(255,255,255,0.75);
+      --text-primary:   rgba(10,20,40,0.92);
+      --text-secondary: rgba(10,20,40,0.52);
+      --text-tertiary:  rgba(10,20,40,0.30);
+      --hud-glow:       0 0 40px rgba(79,163,255,0.10);
+    }
+    body.theme-light .bg-grid {
+      background-image:
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    body.theme-light .bg-orb { opacity: 0.22; }
+    body.theme-light nav {
+      background: rgba(240,244,248,0.80);
+      border-bottom-color: rgba(0,0,0,0.07);
+    }
+
+    /*--v1--*/
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html { scroll-behavior: smooth; }
@@ -83,6 +109,25 @@
         linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
       background-size: 60px 60px;
     }
+    /*-- pic bg-- */
+    .bg-scene {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.6s ease;
+    }
+    /* 暗色：极光/雪山，低透明度 */
+    .bg-scene-dark {
+      background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1600&q=80');
+      opacity: 0.12;
+    }
+    /* 亮色：绿野/晨雾，较高透明度 */
+    .bg-scene-light {
+      background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80');
+      opacity: 0;
+    }
+    body.theme-light .bg-scene-dark  { opacity: 0; }
+    body.theme-light .bg-scene-light { opacity: 0.18; }
 
     /* ─────────────────────────────────────────
        NAV
@@ -134,6 +179,16 @@
       background: var(--accent-blue);
       color: #fff;
     }
+    /* 新增主题按钮 */
+    .theme-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+    }
+    .theme-btn:hover { background: var(--glass-hover); transform: scale(1.1); }
 
     /* ─────────────────────────────────────────
        MAIN LAYOUT
@@ -554,10 +609,17 @@
 
   <!-- ── Ambient Background ── -->
   <div class="bg-canvas">
+    <!--add bg-->
+    <!-- 暗色主题背景：山川雪景 -->
+    <div class="bg-scene bg-scene-dark"></div>
+    <!-- 亮色主题背景：自然风光 -->
+    <div class="bg-scene bg-scene-light"></div>
+    
     <div class="bg-orb"></div>
     <div class="bg-orb"></div>
     <div class="bg-orb"></div>
   </div>
+
   <div class="bg-grid"></div>
 
   <!-- ── Navigation ── -->
@@ -570,9 +632,21 @@
       <li><a href="#patents"><span class="zh">专利软著</span><span class="en">Patents</span></a></li>
       <li><a href="#activities"><span class="zh">学术活动</span><span class="en">Activities</span></a></li>
     </ul>
+    <!--
     <div class="lang-toggle" id="langToggle">
       <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+    -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+        <span class="theme-icon-dark">🌙</span>
+        <span class="theme-icon-light" style="display:none">☀️</span>
+      </button>
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" id="btnZH" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+      </div>
     </div>
   </nav>
 
@@ -1192,6 +1266,17 @@
       document.getElementById('btnEN').classList.toggle('active', lang === 'en');
       localStorage.setItem('lang', lang);
     }
+    // ── Theme Toggle ──
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('theme-light');
+      document.querySelector('.theme-icon-dark').style.display = isLight ? 'none'  : '';
+      document.querySelector('.theme-icon-light').style.display = isLight ? '' : 'none';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+    
+    // Restore theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') toggleTheme();
 
     // Restore preference
     const saved = localStorage.getItem('lang');
